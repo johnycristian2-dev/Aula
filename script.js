@@ -3,6 +3,35 @@ const GITHUB_USERNAME = 'johnycristian2-dev'
 const GITHUB_API_URL = `https://api.github.com/users/${GITHUB_USERNAME}`
 const GITHUB_REPOS_URL = `https://api.github.com/users/${GITHUB_USERNAME}/repos?sort=stars&order=desc&per_page=6`
 
+function aplicarTema(tema) {
+  const botaoTema = document.getElementById('themeToggle')
+  const modoEscuro = tema === 'dark'
+
+  document.body.classList.toggle('dark-mode', modoEscuro)
+
+  if (botaoTema) {
+    botaoTema.textContent = modoEscuro ? 'Modo claro' : 'Modo escuro'
+  }
+}
+
+function inicializarTema() {
+  const temaSalvo = localStorage.getItem('theme')
+  const prefereEscuro =
+    window.matchMedia &&
+    window.matchMedia('(prefers-color-scheme: dark)').matches
+  const temaInicial = temaSalvo || (prefereEscuro ? 'dark' : 'light')
+
+  aplicarTema(temaInicial)
+}
+
+function alternarTema() {
+  const modoEscuroAtivo = document.body.classList.contains('dark-mode')
+  const novoTema = modoEscuroAtivo ? 'light' : 'dark'
+
+  localStorage.setItem('theme', novoTema)
+  aplicarTema(novoTema)
+}
+
 // Função para carregar dados do perfil do GitHub
 async function carregarPerfil() {
   try {
@@ -102,6 +131,7 @@ function animarNumeros() {
 
 // Inicializar quando a página carregar
 document.addEventListener('DOMContentLoaded', () => {
+  inicializarTema()
   carregarPerfil()
   carregarRepositorios()
 
@@ -112,6 +142,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const form = document.getElementById('contatoForm')
   if (form) {
     form.addEventListener('submit', handleFormSubmit)
+  }
+
+  const botaoTema = document.getElementById('themeToggle')
+  if (botaoTema) {
+    botaoTema.addEventListener('click', alternarTema)
   }
 })
 

@@ -24,6 +24,9 @@ body {
   background-color: var(--light-bg);
   color: var(--text-primary);
   line-height: 1.6;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
 }
 
 .container {
@@ -99,6 +102,22 @@ body {
   background-color: #0052a3;
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(0, 102, 204, 0.6);
+}
+
+.theme-toggle {
+  background: transparent;
+  color: var(--text-primary);
+  border: 2px solid var(--primary-color);
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.theme-toggle:hover {
+  background: var(--primary-color);
+  color: white;
 }
 
 /* ==================== HERO SECTION ==================== */
@@ -562,6 +581,87 @@ body {
   margin-top: 2rem;
   color: rgba(255, 255, 255, 0.7);
   font-size: 0.9rem;
+}
+
+/* ==================== DARK MODE ==================== */
+
+body.dark-mode {
+  background-color: #0b1120;
+  color: #e2e8f0;
+}
+
+body.dark-mode .navbar {
+  background-color: #111827;
+  border-bottom-color: #38bdf8;
+}
+
+body.dark-mode .nav-links a {
+  color: #e2e8f0;
+}
+
+body.dark-mode .nav-links a:hover {
+  color: #38bdf8;
+  background-color: rgba(56, 189, 248, 0.12);
+}
+
+body.dark-mode .theme-toggle {
+  border-color: #38bdf8;
+  color: #e2e8f0;
+}
+
+body.dark-mode .theme-toggle:hover {
+  background: #38bdf8;
+  color: #0f172a;
+}
+
+body.dark-mode .sobre {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+}
+
+body.dark-mode .github-stats,
+body.dark-mode .contato {
+  background-color: #0f172a;
+}
+
+body.dark-mode .projetos {
+  background-color: #111827;
+}
+
+body.dark-mode .sobre-text,
+body.dark-mode .profile-card,
+body.dark-mode .repo-card,
+body.dark-mode .contato-form,
+body.dark-mode .redes-sociais {
+  background: #1f2937;
+  border-color: #334155;
+  color: #e2e8f0;
+}
+
+body.dark-mode .sobre-text p,
+body.dark-mode .repo-card p,
+body.dark-mode .profile-card p,
+body.dark-mode .form-group label,
+body.dark-mode .maintenance,
+body.dark-mode .stat-label {
+  color: #cbd5e1;
+}
+
+body.dark-mode .form-group input,
+body.dark-mode .form-group textarea {
+  background: #0f172a;
+  border-color: #334155;
+  color: #e2e8f0;
+}
+
+body.dark-mode .repo-language,
+body.dark-mode .social-link {
+  background-color: #0f172a;
+  color: #e2e8f0;
+}
+
+body.dark-mode .social-link:hover:not(:has(.maintenance)) {
+  background-color: var(--primary-color);
+  color: white;
 }
 
 /* ==================== RESPONSIVE ==================== */
