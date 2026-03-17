@@ -1,0 +1,24 @@
+# Arquivos do sistema
+.DS_Store
+Thumbs.db
+*.bak
+
+# IDEs
+.vscode/
+.idea/
+*.code-workspace
+
+# Node modules (se usar npm/node no futuro)
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Arquivos de compilação/build
+dist/
+build/
+*.log
+
+# Ambiente
+.env
+.env.local
+.env.*.local
