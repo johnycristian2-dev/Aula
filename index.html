@@ -3,18 +3,19 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Johny Cristian Bolis | Desenvolvedor</title>
+    <title>Johny Cristian Bolis | Início</title>
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
     <nav class="navbar">
       <div class="container navbar-container">
-        <a href="#inicio" class="logo">JCB</a>
+        <a href="index.html" class="logo">JCB</a>
         <ul class="nav-links">
-          <li><a href="#inicio">Início</a></li>
-          <li><a href="#sobre">Sobre</a></li>
-          <li><a href="#projetos">Projetos</a></li>
-          <li><a href="#contato">Contato</a></li>
+          <li><a href="index.html">Início</a></li>
+          <li><a href="sobre.html">Sobre</a></li>
+          <li><a href="projetos.html">Projetos</a></li>
+          <li><a href="contato.html">Contato</a></li>
+          <li><a href="links.html">Links</a></li>
           <li>
             <a
               href="https://github.com/johnycristian2-dev"
@@ -37,7 +38,7 @@
       </div>
     </nav>
 
-    <header class="hero" id="inicio">
+    <header class="hero">
       <div class="banner-container">
         <img
           src="images/profile.jpg"
@@ -49,157 +50,37 @@
           <h1>Johny Cristian Bolis</h1>
           <p class="turma-badge">2024T2</p>
           <p class="subtitle">Estudante de Ciência da Computação</p>
+          <div class="hero-btns">
+            <a href="sobre.html" class="hero-btn">Sobre Mim</a>
+            <a href="projetos.html" class="hero-btn hero-btn-outline">Projetos</a>
+          </div>
         </div>
       </div>
     </header>
 
-    <section class="sobre" id="sobre">
+    <section class="home-cards">
       <div class="container">
-        <h2>Sobre Mim</h2>
-        <div class="sobre-content">
-          <div class="sobre-text">
-            <p>
-              Tenho 19 anos e sou estudante de
-              <strong>Ciência da Computação na URI – Erechim</strong>,
-              atualmente no terceiro semestre. Minha trajetória inclui
-              experiências práticas em empreendedorismo, tendo gerido uma loja
-              de roupas online de forma autônoma e trabalhado com dropshipping.
-              Atualmente, atuo como
-              <strong>Suporte de Sistemas na Unimed Erechim</strong>,
-              consolidando minhas habilidades técnicas e de atendimento ao
-              cliente.
-            </p>
-
-            <h3>🎯 Competências e Habilidades</h3>
-            <ol class="skills-list">
-              <li>
-                <strong>Empreendedorismo:</strong> Gestão de negócios online e
-                experiência com dropshipping
-              </li>
-              <li>
-                <strong>Design:</strong> Figma, Canva e Kittl para criação de
-                interfaces e conteúdos visuais
-              </li>
-              <li>
-                <strong>Desenvolvimento Frontend:</strong> JavaScript e Nuxt com
-                conhecimento prático em projetos web
-              </li>
-              <li>
-                <strong>Suporte Técnico:</strong> Experiência em suporte de
-                sistemas na área da saúde
-              </li>
-              <li>
-                <strong>Idiomas:</strong> Fluência em inglês com 9 anos de
-                estudo (sólida base gramatical e oral)
-              </li>
-              <li>
-                <strong>Soft Skills:</strong> Comunicação, proatividade,
-                resolução de problemas e trabalho em equipe
-              </li>
-            </ol>
-
-            <p
-              style="
-                margin-top: 2rem;
-                font-style: italic;
-                color: var(--text-secondary);
-              "
-            >
-              Estou constantemente em busca de novos conhecimentos e desafios,
-              visando evolução pessoal e profissional em um mercado dinâmico e
-              inovador.
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="github-stats" id="github">
-      <div class="container">
-        <h2>Meu Perfil GitHub</h2>
-        <div class="stats-container">
-          <div class="profile-card">
-            <img id="avatar" src="" alt="Avatar" class="avatar" />
-            <h3 id="github-name"></h3>
-            <p id="github-bio"></p>
-            <div class="stats">
-              <div class="stat">
-                <span class="stat-value" id="repos">0</span>
-                <span class="stat-label">Repositórios</span>
-              </div>
-              <div class="stat">
-                <span class="stat-value" id="followers">0</span>
-                <span class="stat-label">Seguidores</span>
-              </div>
-              <div class="stat">
-                <span class="stat-value" id="following">0</span>
-                <span class="stat-label">Seguindo</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="projetos" id="projetos">
-      <div class="container">
-        <h2>Meus Projetos</h2>
-        <div id="repositorios" class="repos-grid">
-          <!-- Os projetos serão carregados via JavaScript -->
-        </div>
-      </div>
-    </section>
-
-    <section class="contato" id="contato">
-      <div class="container">
-        <h2>Entre em Contato</h2>
-        <div class="contato-content">
-          <form class="contato-form" id="contatoForm">
-            <div class="form-group">
-              <label for="nome">Nome *</label>
-              <input type="text" id="nome" name="nome" required />
-            </div>
-            <div class="form-group">
-              <label for="email">Email *</label>
-              <input type="email" id="email" name="email" required />
-            </div>
-            <div class="form-group">
-              <label for="mensagem">Mensagem *</label>
-              <textarea
-                id="mensagem"
-                name="mensagem"
-                rows="5"
-                required
-              ></textarea>
-            </div>
-            <button type="submit" class="btn-enviar">Enviar Mensagem</button>
-          </form>
-
-          <div class="redes-sociais">
-            <h3>Redes Sociais</h3>
-            <div class="sociais-links">
-              <a href="#" class="social-link" title="LinkedIn">
-                <span>LinkedIn</span>
-                <span class="maintenance">🔧 Em manutenção</span>
-              </a>
-              <a href="#" class="social-link" title="Instagram">
-                <span>Instagram</span>
-                <span class="maintenance">🔧 Em manutenção</span>
-              </a>
-              <a href="#" class="social-link" title="Twitter">
-                <span>Twitter</span>
-                <span class="maintenance">🔧 Em manutenção</span>
-              </a>
-              <a
-                href="https://github.com/johnycristian2-dev"
-                target="_blank"
-                class="social-link"
-                title="GitHub"
-              >
-                <span>GitHub</span>
-              </a>
-            </div>
-          </div>
+        <div class="cards-grid">
+          <a href="sobre.html" class="home-card">
+            <span class="home-card-icon">👤</span>
+            <h3>Sobre Mim</h3>
+            <p>Conheça minha trajetória, habilidades e experiências profissionais.</p>
+          </a>
+          <a href="projetos.html" class="home-card">
+            <span class="home-card-icon">📦</span>
+            <h3>Projetos</h3>
+            <p>Veja meus repositórios e projetos publicados no GitHub.</p>
+          </a>
+          <a href="contato.html" class="home-card">
+            <span class="home-card-icon">✉️</span>
+            <h3>Contato</h3>
+            <p>Entre em contato comigo pelas redes sociais ou pelo formulário.</p>
+          </a>
+          <a href="links.html" class="home-card">
+            <span class="home-card-icon">🔗</span>
+            <h3>Links Úteis</h3>
+            <p>Cursos e recursos recomendados para desenvolvimento web.</p>
+          </a>
         </div>
       </div>
     </section>

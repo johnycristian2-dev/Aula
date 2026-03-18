@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Johny Cristian Bolis | Projetos</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <div class="container navbar-container">
+        <a href="index.html" class="logo">JCB</a>
+        <ul class="nav-links">
+          <li><a href="index.html">Início</a></li>
+          <li><a href="sobre.html">Sobre</a></li>
+          <li><a href="projetos.html" class="active">Projetos</a></li>
+          <li><a href="contato.html">Contato</a></li>
+          <li><a href="links.html">Links</a></li>
+          <li>
+            <a
+              href="https://github.com/johnycristian2-dev"
+              target="_blank"
+              class="nav-github"
+              >GitHub</a
+            >
+          </li>
+          <li>
+            <button
+              id="themeToggle"
+              class="theme-toggle"
+              type="button"
+              aria-label="Alternar modo escuro"
+            >
+              Modo escuro
+            </button>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <div class="page-header">
+      <div class="container">
+        <h1>Projetos</h1>
+        <p>Meus repositórios e trabalhos no GitHub</p>
+      </div>
+    </div>
+
+    <section class="github-stats">
+      <div class="container">
+        <h2>Meu Perfil GitHub</h2>
+        <div class="stats-container">
+          <div class="profile-card">
+            <img id="avatar" src="" alt="Avatar" class="avatar" />
+            <h3 id="github-name"></h3>
+            <p id="github-bio"></p>
+            <div class="stats">
+              <div class="stat">
+                <span class="stat-value" id="repos">0</span>
+                <span class="stat-label">Repositórios</span>
+              </div>
+              <div class="stat">
+                <span class="stat-value" id="followers">0</span>
+                <span class="stat-label">Seguidores</span>
+              </div>
+              <div class="stat">
+                <span class="stat-value" id="following">0</span>
+                <span class="stat-label">Seguindo</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="projetos">
+      <div class="container">
+        <h2>Meus Repositórios</h2>
+        <div id="repositorios" class="repos-grid">
+          <!-- Carregado via script.js -->
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="container">
+        <p class="copyright">
+          &copy; 2026 Johny Cristian Bolis. Todos os direitos reservados.
+        </p>
+      </div>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>

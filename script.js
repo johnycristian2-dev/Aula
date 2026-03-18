@@ -32,6 +32,17 @@ function alternarTema() {
   aplicarTema(novoTema)
 }
 
+function marcarNavAtivo() {
+  const pagina = window.location.pathname.split('/').pop() || 'index.html'
+  document.querySelectorAll('.nav-links a').forEach((link) => {
+    link.classList.remove('active')
+    const href = link.getAttribute('href')
+    if (href === pagina || (pagina === '' && href === 'index.html')) {
+      link.classList.add('active')
+    }
+  })
+}
+
 // Função para carregar dados do perfil do GitHub
 async function carregarPerfil() {
   try {
@@ -132,11 +143,16 @@ function animarNumeros() {
 // Inicializar quando a página carregar
 document.addEventListener('DOMContentLoaded', () => {
   inicializarTema()
-  carregarPerfil()
-  carregarRepositorios()
+  marcarNavAtivo()
 
-  // Animar números após carregar dados
-  setTimeout(animarNumeros, 500)
+  // Carregar dados do GitHub apenas nas páginas que precisam
+  if (document.getElementById('avatar')) {
+    carregarPerfil()
+    setTimeout(animarNumeros, 500)
+  }
+  if (document.getElementById('repositorios')) {
+    carregarRepositorios()
+  }
 
   // Configurar formulário de contato
   const form = document.getElementById('contatoForm')
