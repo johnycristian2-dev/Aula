@@ -324,6 +324,236 @@ body {
   margin-top: 0.3rem;
 }
 
+/* ==================== MARKETPLACE ==================== */
+
+.marketplace-header {
+  background: linear-gradient(120deg, #0f4c81 0%, #0f8f8f 55%, #38bdf8 100%);
+}
+
+.marketplace-page {
+  padding: 80px 0 50px;
+  background:
+    radial-gradient(
+      circle at 15% 10%,
+      rgba(56, 189, 248, 0.16),
+      transparent 40%
+    ),
+    radial-gradient(
+      circle at 85% 80%,
+      rgba(0, 102, 204, 0.14),
+      transparent 35%
+    ),
+    #f7fbff;
+}
+
+.marketplace-grid {
+  display: grid;
+  grid-template-columns: 1.45fr 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+.product-showcase,
+.buy-box {
+  background: white;
+  border-radius: 18px;
+  box-shadow: var(--shadow);
+}
+
+.product-showcase {
+  padding: 2.2rem;
+}
+
+.product-badge {
+  display: inline-block;
+  background: #d9f99d;
+  color: #365314;
+  font-size: 0.8rem;
+  font-weight: 700;
+  border-radius: 999px;
+  padding: 6px 12px;
+  margin-bottom: 1rem;
+}
+
+.product-title {
+  font-size: 2rem;
+  margin-bottom: 0.4rem;
+  color: #0f172a;
+}
+
+.product-subtitle {
+  font-size: 1rem;
+  color: #475569;
+  margin-bottom: 1.4rem;
+}
+
+.product-image-wrap {
+  position: relative;
+  border-radius: 14px;
+  overflow: hidden;
+  margin-bottom: 1.2rem;
+}
+
+.product-image {
+  width: 100%;
+  height: 320px;
+  object-fit: cover;
+  display: block;
+}
+
+.product-image-tag {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background: rgba(15, 23, 42, 0.82);
+  color: #f8fafc;
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.product-highlights {
+  list-style: none;
+  display: grid;
+  gap: 0.65rem;
+  color: #1f2937;
+  font-weight: 500;
+}
+
+.buy-box {
+  padding: 2.2rem;
+  border: 2px solid rgba(15, 76, 129, 0.14);
+}
+
+.buy-label {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #0369a1;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.buy-old-price {
+  margin-top: 0.9rem;
+  color: #64748b;
+  text-decoration: line-through;
+}
+
+.buy-price {
+  font-size: 2.1rem;
+  line-height: 1.1;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.buy-installments {
+  color: #0f766e;
+  font-weight: 600;
+  margin-bottom: 1.3rem;
+}
+
+.buy-field {
+  display: block;
+  margin: 0.7rem 0 0.35rem;
+  color: #1f2937;
+  font-weight: 600;
+}
+
+.buy-select,
+.buy-qty {
+  width: 100%;
+  border: 2px solid #cbd5e1;
+  border-radius: 10px;
+  padding: 11px;
+  font-size: 1rem;
+  color: #0f172a;
+  background: #f8fafc;
+}
+
+.buy-select:focus,
+.buy-qty:focus {
+  outline: none;
+  border-color: #0f4c81;
+  box-shadow: 0 0 0 3px rgba(15, 76, 129, 0.15);
+}
+
+.buy-btn,
+.buy-btn-outline {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 1rem;
+  margin-top: 0.9rem;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.buy-btn {
+  border: none;
+  background: #0f4c81;
+  color: white;
+}
+
+.buy-btn:hover {
+  background: #0c3d68;
+  transform: translateY(-2px);
+}
+
+.buy-btn-outline {
+  border: 2px solid #0f4c81;
+  background: transparent;
+  color: #0f4c81;
+}
+
+.buy-btn-outline:hover {
+  background: #0f4c81;
+  color: white;
+}
+
+.buy-security {
+  margin-top: 1.1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e2e8f0;
+  color: #64748b;
+  font-size: 0.9rem;
+}
+
+.marketplace-extra {
+  padding: 0 0 80px;
+  background-color: #f7fbff;
+}
+
+.marketplace-extra h2 {
+  color: #0f4c81;
+  margin-bottom: 1.4rem;
+  text-align: center;
+  font-size: 1.8rem;
+}
+
+.spec-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.2rem;
+}
+
+.spec-card {
+  background: white;
+  border-radius: 14px;
+  border: 1px solid #dbeafe;
+  padding: 1.2rem;
+}
+
+.spec-card h3 {
+  color: #0f172a;
+  margin-bottom: 0.45rem;
+}
+
+.spec-card p {
+  color: #475569;
+}
+
 /* ==================== HERO SECTION ==================== */
 
 .hero {
@@ -879,6 +1109,64 @@ body.dark-mode .links-page {
   background-color: #0f172a;
 }
 
+body.dark-mode .marketplace-page,
+body.dark-mode .marketplace-extra {
+  background:
+    radial-gradient(
+      circle at 15% 10%,
+      rgba(56, 189, 248, 0.12),
+      transparent 42%
+    ),
+    radial-gradient(
+      circle at 85% 80%,
+      rgba(15, 76, 129, 0.16),
+      transparent 40%
+    ),
+    #0f172a;
+}
+
+body.dark-mode .product-showcase,
+body.dark-mode .buy-box,
+body.dark-mode .spec-card {
+  background: #1f2937;
+  border-color: #334155;
+}
+
+body.dark-mode .product-title,
+body.dark-mode .buy-price,
+body.dark-mode .spec-card h3 {
+  color: #e2e8f0;
+}
+
+body.dark-mode .product-subtitle,
+body.dark-mode .product-highlights,
+body.dark-mode .buy-field,
+body.dark-mode .buy-security,
+body.dark-mode .spec-card p {
+  color: #cbd5e1;
+}
+
+body.dark-mode .buy-select,
+body.dark-mode .buy-qty {
+  background: #0f172a;
+  border-color: #334155;
+  color: #e2e8f0;
+}
+
+body.dark-mode .buy-btn-outline {
+  border-color: #38bdf8;
+  color: #38bdf8;
+}
+
+body.dark-mode .buy-btn-outline:hover {
+  background: #38bdf8;
+  color: #0f172a;
+}
+
+body.dark-mode .marketplace-extra h2 {
+  color: #38bdf8;
+}
+
 body.dark-mode .home-card {
   background: #1f2937;
   color: #e2e8f0;
@@ -964,6 +1252,14 @@ body.dark-mode .page-header {
     padding: 2rem;
   }
 
+  .marketplace-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .product-image {
+    height: 250px;
+  }
+
   .redes-sociais {
     padding: 2rem;
   }
@@ -1031,6 +1327,19 @@ body.dark-mode .page-header {
   .contato-form,
   .redes-sociais {
     padding: 1.5rem;
+  }
+
+  .product-showcase,
+  .buy-box {
+    padding: 1.5rem;
+  }
+
+  .product-title {
+    font-size: 1.6rem;
+  }
+
+  .buy-price {
+    font-size: 1.8rem;
   }
 
   .form-group input,

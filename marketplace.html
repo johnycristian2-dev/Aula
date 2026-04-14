@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Johny Cristian Bolis | Marketplace</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <div class="container navbar-container">
+        <a href="index.html" class="logo">JCB</a>
+        <ul class="nav-links">
+          <li><a href="index.html">Início</a></li>
+          <li><a href="sobre.html">Sobre</a></li>
+          <li><a href="projetos.html">Projetos</a></li>
+          <li><a href="marketplace.html" class="active">Marketplace</a></li>
+          <li><a href="contato.html">Contato</a></li>
+          <li><a href="links.html">Links</a></li>
+          <li>
+            <a
+              href="https://github.com/johnycristian2-dev"
+              target="_blank"
+              class="nav-github"
+              >GitHub</a
+            >
+          </li>
+          <li>
+            <button
+              id="themeToggle"
+              class="theme-toggle"
+              type="button"
+              aria-label="Alternar modo escuro"
+            >
+              Modo escuro
+            </button>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <div class="page-header marketplace-header">
+      <div class="container">
+        <h1>Marketplace</h1>
+        <p>Tela de produto para o projeto acadêmico</p>
+      </div>
+    </div>
+
+    <section class="marketplace-page">
+      <div class="container marketplace-grid">
+        <div class="product-showcase">
+          <div class="product-badge">Destaque da Semana</div>
+          <h2 class="product-title">Smartwatch Pulse X Pro</h2>
+          <p class="product-subtitle">
+            Controle seus treinos, notificações e saúde com autonomia de 10 dias
+            de bateria.
+          </p>
+
+          <div class="product-image-wrap">
+            <img
+              class="product-image"
+              src="images/profile.jpg"
+              alt="Produto em destaque do marketplace"
+            />
+            <span class="product-image-tag">Frete grátis</span>
+          </div>
+
+          <ul class="product-highlights">
+            <li>✔ Tela AMOLED de 1.9" com brilho adaptativo</li>
+            <li>✔ Monitor cardíaco e oxigenação 24h</li>
+            <li>✔ Resistência à água 5 ATM</li>
+            <li>✔ Compatível com Android e iOS</li>
+          </ul>
+        </div>
+
+        <aside class="buy-box">
+          <p class="buy-label">Oferta por tempo limitado</p>
+          <p class="buy-old-price">de R$ 899,90</p>
+          <p class="buy-price">R$ 649,90</p>
+          <p class="buy-installments">ou 10x de R$ 64,99 sem juros</p>
+
+          <label class="buy-field" for="productColor">Cor</label>
+          <select id="productColor" class="buy-select">
+            <option>Preto</option>
+            <option>Prata</option>
+            <option>Azul</option>
+          </select>
+
+          <label class="buy-field" for="productQty">Quantidade</label>
+          <input
+            id="productQty"
+            class="buy-qty"
+            type="number"
+            min="1"
+            max="10"
+            value="1"
+          />
+
+          <button class="buy-btn" type="button">Adicionar ao carrinho</button>
+          <button class="buy-btn-outline" type="button">Comprar agora</button>
+
+          <div class="buy-security">
+            <p>Pagamento seguro com cartão, PIX e boleto.</p>
+            <p>Troca grátis em até 7 dias após a entrega.</p>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="marketplace-extra">
+      <div class="container">
+        <h2>Especificações Técnicas</h2>
+        <div class="spec-grid">
+          <article class="spec-card">
+            <h3>Bateria</h3>
+            <p>Até 10 dias em uso misto e recarga rápida magnética.</p>
+          </article>
+          <article class="spec-card">
+            <h3>Saúde</h3>
+            <p>Frequência cardíaca, sono, estresse e SpO2 em tempo real.</p>
+          </article>
+          <article class="spec-card">
+            <h3>Conectividade</h3>
+            <p>Bluetooth 5.3, notificações de apps e chamadas no pulso.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="container">
+        <p class="copyright">
+          &copy; 2026 Johny Cristian Bolis. Todos os direitos reservados.
+        </p>
+      </div>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>

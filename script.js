@@ -3,6 +3,104 @@ const GITHUB_USERNAME = 'johnycristian2-dev'
 const GITHUB_API_URL = `https://api.github.com/users/${GITHUB_USERNAME}`
 const GITHUB_REPOS_URL = `https://api.github.com/users/${GITHUB_USERNAME}/repos?sort=stars&order=desc&per_page=6`
 
+function nomeCompleto(nome, sobrenome) {
+  return `${String(nome).trim()} ${String(sobrenome).trim()}`.trim()
+}
+
+function calcularIdade(anoNascimento, dataReferencia = new Date()) {
+  const ano = Number(anoNascimento)
+  if (!Number.isInteger(ano) || ano <= 0) {
+    throw new Error('Informe um ano de nascimento válido.')
+  }
+
+  const anoAtual = dataReferencia.getFullYear()
+  const idade = anoAtual - ano
+
+  return idade >= 0 ? idade : 0
+}
+
+function jaFezAniversario(dia, mes, dataReferencia = new Date()) {
+  const diaNasc = Number(dia)
+  const mesNasc = Number(mes)
+
+  if (
+    !Number.isInteger(diaNasc) ||
+    !Number.isInteger(mesNasc) ||
+    diaNasc < 1 ||
+    diaNasc > 31 ||
+    mesNasc < 1 ||
+    mesNasc > 12
+  ) {
+    throw new Error('Informe dia e mês válidos para o aniversário.')
+  }
+
+  const mesAtual = dataReferencia.getMonth() + 1
+  const diaAtual = dataReferencia.getDate()
+
+  return mesAtual > mesNasc || (mesAtual === mesNasc && diaAtual >= diaNasc)
+}
+
+function diasParaAniversario(dia, mes, dataReferencia = new Date()) {
+  const diaNasc = Number(dia)
+  const mesNasc = Number(mes)
+
+  if (
+    !Number.isInteger(diaNasc) ||
+    !Number.isInteger(mesNasc) ||
+    diaNasc < 1 ||
+    diaNasc > 31 ||
+    mesNasc < 1 ||
+    mesNasc > 12
+  ) {
+    throw new Error('Informe dia e mês válidos para o aniversário.')
+  }
+
+  const anoAtual = dataReferencia.getFullYear()
+  let proximoAniversario = new Date(anoAtual, mesNasc - 1, diaNasc)
+
+  if (proximoAniversario < dataReferencia) {
+    proximoAniversario = new Date(anoAtual + 1, mesNasc - 1, diaNasc)
+  }
+
+  const umDiaEmMs = 1000 * 60 * 60 * 24
+  const hojeSemHora = new Date(
+    dataReferencia.getFullYear(),
+    dataReferencia.getMonth(),
+    dataReferencia.getDate(),
+  )
+  const aniversarioSemHora = new Date(
+    proximoAniversario.getFullYear(),
+    proximoAniversario.getMonth(),
+    proximoAniversario.getDate(),
+  )
+
+  return Math.round((aniversarioSemHora - hojeSemHora) / umDiaEmMs)
+}
+
+function mensagem(nome, anoNascimento, dataReferencia = new Date()) {
+  const idade = calcularIdade(anoNascimento, dataReferencia)
+  return `Olá ${String(nome).trim()}, você tem ${idade} anos.`
+}
+
+function anosParaCem(nome, anoNascimento, dataReferencia = new Date()) {
+  const idade = calcularIdade(anoNascimento, dataReferencia)
+  const anosRestantes = 100 - idade
+  const nomeLimpo = String(nome).trim()
+
+  if (anosRestantes <= 0) {
+    return `${nomeLimpo}, você já completou 100 anos.`
+  }
+
+  return `${nomeLimpo}, faltam ${anosRestantes} anos para você completar 100 anos.`
+}
+
+window.nomeCompleto = nomeCompleto
+window.calcularIdade = calcularIdade
+window.jaFezAniversario = jaFezAniversario
+window.diasParaAniversario = diasParaAniversario
+window.mensagem = mensagem
+window.anosParaCem = anosParaCem
+
 function aplicarTema(tema) {
   const botaoTema = document.getElementById('themeToggle')
   const modoEscuro = tema === 'dark'
@@ -45,13 +143,18 @@ function marcarNavAtivo() {
 
 // Função para carregar dados do perfil do GitHub
 async function carregarPerfil() {
+  const avatar = document.getElementById('avatar')
+  if (!avatar) {
+    return
+  }
+
   try {
     const response = await fetch(GITHUB_API_URL)
     const data = await response.json()
 
     if (response.ok) {
       // Populando os dados do perfil
-      document.getElementById('avatar').src = data.avatar_url
+      avatar.src = data.avatar_url
       document.getElementById('github-name').textContent =
         data.name || data.login
       document.getElementById('github-bio').textContent =
@@ -69,12 +172,16 @@ async function carregarPerfil() {
 
 // Função para carregar repositórios
 async function carregarRepositorios() {
+  const container = document.getElementById('repositorios')
+  if (!container) {
+    return
+  }
+
   try {
     const response = await fetch(GITHUB_REPOS_URL)
     const repositorios = await response.json()
 
     if (response.ok) {
-      const container = document.getElementById('repositorios')
       container.innerHTML = '' // Limpar conteúdo anterior
 
       if (repositorios.length === 0) {
