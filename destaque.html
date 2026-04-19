@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Johny Cristian Bolis | Projetos</title>
+    <title>Johny Cristian Bolis | Em destaque</title>
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
@@ -13,9 +13,9 @@
         <ul class="nav-links">
           <li><a href="index.html">Início</a></li>
           <li><a href="sobre.html">Sobre</a></li>
-          <li><a href="projetos.html" class="active">Projetos</a></li>
+          <li><a href="projetos.html">Projetos</a></li>
           <li><a href="marketplace.html">Marketplace</a></li>
-          <li><a href="destaque.html">Em destaque</a></li>
+          <li><a href="destaque.html" class="active">Em destaque</a></li>
           <li><a href="contato.html">Contato</a></li>
           <li><a href="links.html">Links</a></li>
           <li>
@@ -40,46 +40,42 @@
       </div>
     </nav>
 
-    <div class="page-header">
+    <div class="page-header featured-header">
       <div class="container">
-        <h1>Projetos</h1>
-        <p>Meus repositórios e trabalhos no GitHub</p>
+        <h1>Em destaque</h1>
+        <p>Produtos com API, cache local e fallback inteligente</p>
       </div>
     </div>
 
-    <section class="github-stats">
+    <section class="featured-page">
       <div class="container">
-        <h2>Meu Perfil GitHub</h2>
-        <div class="stats-container">
-          <div class="profile-card">
-            <img id="avatar" src="" alt="Avatar" class="avatar" />
-            <h3 id="github-name"></h3>
-            <p id="github-bio"></p>
-            <div class="stats">
-              <div class="stat">
-                <span class="stat-value" id="repos">0</span>
-                <span class="stat-label">Repositórios</span>
-              </div>
-              <div class="stat">
-                <span class="stat-value" id="followers">0</span>
-                <span class="stat-label">Seguidores</span>
-              </div>
-              <div class="stat">
-                <span class="stat-value" id="following">0</span>
-                <span class="stat-label">Seguindo</span>
-              </div>
-            </div>
+        <div class="featured-toolbar">
+          <div class="featured-field">
+            <label for="featuredNameFilter">Filtrar por nome</label>
+            <input
+              type="text"
+              id="featuredNameFilter"
+              placeholder="Ex.: notebook"
+            />
+          </div>
+
+          <div class="featured-field">
+            <label for="featuredPriceFilter">Filtrar por preço</label>
+            <select id="featuredPriceFilter">
+              <option value="all">Todos os preços</option>
+              <option value="0-199">Até R$ 199</option>
+              <option value="200-799">R$ 200 a R$ 799</option>
+              <option value="800+">R$ 800 ou mais</option>
+            </select>
           </div>
         </div>
-      </div>
-    </section>
 
-    <section class="projetos">
-      <div class="container">
-        <h2>Meus Repositórios</h2>
-        <div id="repositorios" class="repos-grid">
-          <!-- Carregado via script.js -->
+        <div class="featured-feedback">
+          <p id="featuredStatus" class="featured-status">Carregando produtos...</p>
+          <p id="featuredCount" class="featured-count"></p>
         </div>
+
+        <div id="featuredGrid" class="featured-grid" aria-live="polite"></div>
       </div>
     </section>
 

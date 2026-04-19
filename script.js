@@ -2,6 +2,371 @@
 const GITHUB_USERNAME = 'johnycristian2-dev'
 const GITHUB_API_URL = `https://api.github.com/users/${GITHUB_USERNAME}`
 const GITHUB_REPOS_URL = `https://api.github.com/users/${GITHUB_USERNAME}/repos?sort=stars&order=desc&per_page=6`
+const FEATURED_API_URL = 'https://backend-node-nmze.onrender.com/featured'
+const FEATURED_CACHE_KEY = 'featured_products_cache_v1'
+const FEATURED_CACHE_TTL_MS = 2 * 60 * 1000
+const FEATURED_MAX_RETRIES = 5
+const FEATURED_FALLBACK_IMAGE = 'images/profile.jpg'
+
+const problematicProducts = [
+  {
+    id: '111111',
+    name: 'Notebook Pro 15',
+    price: 3599,
+    image: 'images/profile.jpg',
+    description: 'Notebook para estudo e produtividade.',
+  },
+  {
+    id: '222222',
+    title: 'Mouse Gamer RGB',
+    price: 'R$ 199,90',
+    image: 'images/profile.jpg',
+    description: 'Modelo com sensor de alta precisao.',
+  },
+  {
+    id: '333333',
+    name: 'Teclado Mecanico',
+    price: 'abc',
+    image: '',
+  },
+  {
+    id: null,
+    name: 'Monitor 27',
+    price: 1499.5,
+    photo: 'images/profile.jpg',
+  },
+  {
+    id: '555555',
+    name: '',
+    value: 89,
+    image: 'images/profile.jpg',
+  },
+  {
+    id: '666666',
+    name: 'Headset USB',
+    value: 249.9,
+    thumbnail: 'images/profile.jpg',
+    desc: 'Audio estereo com microfone integrado.',
+  },
+  'item-invalido',
+  {
+    id: '777777',
+    name: 'Webcam Full HD',
+    price: 329,
+    image: 'images/profile.jpg',
+  },
+]
+
+function esperar(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms))
+}
+
+function parsePreco(valor) {
+  if (typeof valor === 'number') {
+    return Number.isFinite(valor) ? valor : NaN
+  }
+
+  if (typeof valor === 'string') {
+    const numerico = valor.replace(/[^\d,.-]/g, '').replace(',', '.')
+    const convertido = Number(numerico)
+    return Number.isFinite(convertido) ? convertido : NaN
+  }
+
+  return NaN
+}
+
+function obterPrimeiroTexto(produto, chaves) {
+  for (const chave of chaves) {
+    const valor = produto[chave]
+    if (typeof valor === 'string' && valor.trim()) {
+      return valor.trim()
+    }
+  }
+  return ''
+}
+
+function normalizarProduto(produto, index) {
+  if (!produto || typeof produto !== 'object' || Array.isArray(produto)) {
+    return null
+  }
+
+  const nome = obterPrimeiroTexto(produto, ['name', 'title', 'produto'])
+  const preco = parsePreco(produto.price ?? produto.preco ?? produto.value)
+
+  if (!nome || !Number.isFinite(preco) || preco < 0) {
+    return null
+  }
+
+  const idBruto = produto.id ?? produto._id ?? produto.sku ?? `item-${index}`
+  const id = String(idBruto)
+
+  const imagem =
+    obterPrimeiroTexto(produto, ['image', 'thumbnail', 'photo']) ||
+    FEATURED_FALLBACK_IMAGE
+
+  const descricao =
+    obterPrimeiroTexto(produto, ['description', 'desc']) ||
+    'Produto disponivel na vitrine de destaque.'
+
+  return {
+    id,
+    name: nome,
+    price: preco,
+    image: imagem,
+    description: descricao,
+  }
+}
+
+function normalizarListaProdutos(lista) {
+  if (!Array.isArray(lista)) {
+    return []
+  }
+
+  return lista
+    .map((produto, index) => normalizarProduto(produto, index))
+    .filter(Boolean)
+}
+
+function extrairListaApi(payload) {
+  if (Array.isArray(payload)) {
+    return payload
+  }
+
+  if (payload && typeof payload === 'object') {
+    if (Array.isArray(payload.data)) {
+      return payload.data
+    }
+
+    if (Array.isArray(payload.products)) {
+      return payload.products
+    }
+
+    if (Array.isArray(payload.featured)) {
+      return payload.featured
+    }
+  }
+
+  return []
+}
+
+function lerCacheDestaque() {
+  try {
+    const bruto = localStorage.getItem(FEATURED_CACHE_KEY)
+    if (!bruto) {
+      return []
+    }
+
+    const cache = JSON.parse(bruto)
+    const agora = Date.now()
+
+    if (!cache || cache.expiresAt <= agora || !Array.isArray(cache.items)) {
+      localStorage.removeItem(FEATURED_CACHE_KEY)
+      return []
+    }
+
+    return normalizarListaProdutos(cache.items)
+  } catch (error) {
+    console.warn('Falha ao ler cache de produtos em destaque:', error)
+    return []
+  }
+}
+
+function salvarCacheDestaque(items) {
+  try {
+    const payload = {
+      items,
+      savedAt: Date.now(),
+      expiresAt: Date.now() + FEATURED_CACHE_TTL_MS,
+    }
+    localStorage.setItem(FEATURED_CACHE_KEY, JSON.stringify(payload))
+  } catch (error) {
+    console.warn('Falha ao salvar cache de produtos em destaque:', error)
+  }
+}
+
+function formatarPrecoBRL(valor) {
+  return new Intl.NumberFormat('pt-BR', {
+    style: 'currency',
+    currency: 'BRL',
+  }).format(valor)
+}
+
+async function buscarProdutosDestaqueComRetry(maxTentativas, onTentativa) {
+  let ultimoErro = new Error('Nao foi possivel carregar os produtos.')
+
+  for (let tentativa = 1; tentativa <= maxTentativas; tentativa += 1) {
+    try {
+      if (typeof onTentativa === 'function') {
+        onTentativa(tentativa, maxTentativas)
+      }
+
+      const response = await fetch(FEATURED_API_URL)
+
+      if (!response.ok) {
+        throw new Error(`Erro HTTP ${response.status}`)
+      }
+
+      const payload = await response.json()
+      const lista = extrairListaApi(payload)
+      const normalizados = normalizarListaProdutos(lista)
+
+      if (normalizados.length === 0) {
+        throw new Error('API retornou lista vazia ou invalida.')
+      }
+
+      return normalizados
+    } catch (error) {
+      ultimoErro = error
+      if (tentativa < maxTentativas) {
+        await esperar(350 * tentativa)
+      }
+    }
+  }
+
+  throw ultimoErro
+}
+
+function inicializarSecaoDestaque() {
+  const grid = document.getElementById('featuredGrid')
+  const status = document.getElementById('featuredStatus')
+  const contador = document.getElementById('featuredCount')
+  const filtroNome = document.getElementById('featuredNameFilter')
+  const filtroPreco = document.getElementById('featuredPriceFilter')
+
+  if (!grid || !status || !contador || !filtroNome || !filtroPreco) {
+    return
+  }
+
+  const state = {
+    baseItems: [],
+    filteredItems: [],
+    source: 'mock',
+  }
+
+  function atualizarStatus(mensagem, tipo = 'info') {
+    status.className = `featured-status is-${tipo}`
+    status.textContent = mensagem
+  }
+
+  function faixaPrecoValida(preco, faixa) {
+    if (faixa === 'all') {
+      return true
+    }
+
+    if (faixa === '0-199') {
+      return preco <= 199
+    }
+
+    if (faixa === '200-799') {
+      return preco >= 200 && preco <= 799
+    }
+
+    if (faixa === '800+') {
+      return preco >= 800
+    }
+
+    return true
+  }
+
+  function renderizarProdutos() {
+    contador.textContent = `${state.filteredItems.length} produto(s) exibido(s) • Fonte: ${state.source.toUpperCase()}`
+
+    if (state.filteredItems.length === 0) {
+      grid.innerHTML = `
+        <article class="featured-empty">
+          <h3>Nenhum produto encontrado</h3>
+          <p>Ajuste os filtros para visualizar outros itens.</p>
+        </article>
+      `
+      return
+    }
+
+    const html = state.filteredItems
+      .map(
+        (item) => `
+          <article class="featured-card">
+            <img
+              class="featured-card-image"
+              src="${item.image}"
+              alt="${item.name}"
+              loading="lazy"
+              onerror="this.onerror=null;this.src='${FEATURED_FALLBACK_IMAGE}'"
+            />
+            <div class="featured-card-content">
+              <h3>${item.name}</h3>
+              <p class="featured-card-description">${item.description}</p>
+              <p class="featured-card-price">${formatarPrecoBRL(item.price)}</p>
+            </div>
+          </article>
+        `,
+      )
+      .join('')
+
+    grid.innerHTML = html
+  }
+
+  function aplicarFiltros() {
+    const termo = filtroNome.value.trim().toLowerCase()
+    const faixa = filtroPreco.value
+
+    state.filteredItems = state.baseItems.filter((item) => {
+      const bateNome = !termo || item.name.toLowerCase().includes(termo)
+      const batePreco = faixaPrecoValida(item.price, faixa)
+      return bateNome && batePreco
+    })
+
+    renderizarProdutos()
+  }
+
+  function usarMockComAviso(mensagem) {
+    state.baseItems = normalizarListaProdutos(problematicProducts)
+    state.source = 'mock'
+    aplicarFiltros()
+    atualizarStatus(mensagem, 'warning')
+  }
+
+  async function carregarProdutos() {
+    grid.innerHTML = '<p class="featured-loading">Carregando produtos em destaque...</p>'
+    atualizarStatus('Inicializando busca de dados...', 'info')
+
+    const cache = lerCacheDestaque()
+    if (cache.length > 0) {
+      state.baseItems = cache
+      state.source = 'localstorage'
+      aplicarFiltros()
+      atualizarStatus('Dados carregados do LocalStorage (cache valido por 2 minutos).', 'success')
+      return
+    }
+
+    try {
+      const produtosApi = await buscarProdutosDestaqueComRetry(
+        FEATURED_MAX_RETRIES,
+        (tentativa, total) => {
+          atualizarStatus(
+            `Buscando API (${tentativa}/${total})...`,
+            'info',
+          )
+        },
+      )
+
+      state.baseItems = produtosApi
+      state.source = 'api'
+      salvarCacheDestaque(produtosApi)
+      aplicarFiltros()
+      atualizarStatus('Produtos carregados com sucesso pela API.', 'success')
+    } catch (error) {
+      console.error('Falha ao carregar API de produtos em destaque:', error)
+      usarMockComAviso(
+        'Nao foi possivel acessar a API apos 5 tentativas. Exibindo dados do MOCK tratado.',
+      )
+    }
+  }
+
+  filtroNome.addEventListener('input', aplicarFiltros)
+  filtroPreco.addEventListener('change', aplicarFiltros)
+
+  carregarProdutos()
+}
 
 function nomeCompleto(nome, sobrenome) {
   return `${String(nome).trim()} ${String(sobrenome).trim()}`.trim()
@@ -251,6 +616,7 @@ function animarNumeros() {
 document.addEventListener('DOMContentLoaded', () => {
   inicializarTema()
   marcarNavAtivo()
+  inicializarSecaoDestaque()
 
   // Carregar dados do GitHub apenas nas páginas que precisam
   if (document.getElementById('avatar')) {
