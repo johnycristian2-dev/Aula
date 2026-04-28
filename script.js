@@ -3,6 +3,7 @@ const GITHUB_USERNAME = 'johnycristian2-dev'
 const GITHUB_API_URL = `https://api.github.com/users/${GITHUB_USERNAME}`
 const GITHUB_REPOS_URL = `https://api.github.com/users/${GITHUB_USERNAME}/repos?sort=stars&order=desc&per_page=6`
 const FEATURED_API_URL = 'https://backend-node-nmze.onrender.com/featured'
+const REGISTER_API_URL = 'https://backend-node-nmze.onrender.com/register'
 const FEATURED_CACHE_KEY = 'featured_products_cache_v1'
 const FEATURED_CACHE_TTL_MS = 2 * 60 * 1000
 const FEATURED_MAX_RETRIES = 5
@@ -133,6 +134,10 @@ function extrairListaApi(payload) {
   }
 
   if (payload && typeof payload === 'object') {
+    if (Array.isArray(payload.value)) {
+      return payload.value
+    }
+
     if (Array.isArray(payload.data)) {
       return payload.data
     }
@@ -326,7 +331,8 @@ function inicializarSecaoDestaque() {
   }
 
   async function carregarProdutos() {
-    grid.innerHTML = '<p class="featured-loading">Carregando produtos em destaque...</p>'
+    grid.innerHTML =
+      '<p class="featured-loading">Carregando produtos em destaque...</p>'
     atualizarStatus('Inicializando busca de dados...', 'info')
 
     const cache = lerCacheDestaque()
@@ -334,7 +340,10 @@ function inicializarSecaoDestaque() {
       state.baseItems = cache
       state.source = 'localstorage'
       aplicarFiltros()
-      atualizarStatus('Dados carregados do LocalStorage (cache valido por 2 minutos).', 'success')
+      atualizarStatus(
+        'Dados carregados do LocalStorage (cache valido por 2 minutos).',
+        'success',
+      )
       return
     }
 
@@ -342,10 +351,7 @@ function inicializarSecaoDestaque() {
       const produtosApi = await buscarProdutosDestaqueComRetry(
         FEATURED_MAX_RETRIES,
         (tentativa, total) => {
-          atualizarStatus(
-            `Buscando API (${tentativa}/${total})...`,
-            'info',
-          )
+          atualizarStatus(`Buscando API (${tentativa}/${total})...`, 'info')
         },
       )
 
@@ -357,7 +363,7 @@ function inicializarSecaoDestaque() {
     } catch (error) {
       console.error('Falha ao carregar API de produtos em destaque:', error)
       usarMockComAviso(
-        'Nao foi possivel acessar a API apos 5 tentativas. Exibindo dados do MOCK tratado.',
+        `Nao foi possivel usar a API apos 5 tentativas (${error.message}). Exibindo dados do MOCK tratado.`,
       )
     }
   }
@@ -612,11 +618,152 @@ function animarNumeros() {
   })
 }
 
+function formatarTelefone(valor) {
+  const digitos = String(valor).replace(/\D/g, '').slice(0, 11)
+
+  if (digitos.length <= 2) {
+    return digitos
+  }
+
+  if (digitos.length <= 7) {
+    return `${digitos.slice(0, 2)} ${digitos.slice(2)}`
+  }
+
+  return `${digitos.slice(0, 2)} ${digitos.slice(2, 7)}-${digitos.slice(7)}`
+}
+
+function formatarCep(valor) {
+  const digitos = String(valor).replace(/\D/g, '').slice(0, 8)
+
+  if (digitos.length <= 5) {
+    return digitos
+  }
+
+  return `${digitos.slice(0, 5)}-${digitos.slice(5)}`
+}
+
+function validarEmail(email) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+}
+
+function validarDadosCadastro(dados) {
+  const erros = {}
+  const nomePalavras = dados.nome.split(/\s+/).filter(Boolean)
+
+  if (nomePalavras.length < 2) {
+    erros.nome = 'Informe nome e sobrenome.'
+  }
+
+  if (!/^\d{2}\s\d{5}-\d{4}$/.test(dados.telefone)) {
+    erros.telefone = 'Use o formato 00 00000-0000.'
+  }
+
+  if (!/^\d{5}-\d{3}$/.test(dados.cep)) {
+    erros.cep = 'Use o formato 00000-000.'
+  }
+
+  if (!validarEmail(dados.email)) {
+    erros.email = 'Informe um email valido.'
+  }
+
+  if (dados.senha.length < 6) {
+    erros.senha = 'A senha deve ter pelo menos 6 caracteres.'
+  }
+
+  if (dados.confirmarSenha.length < 6) {
+    erros.confirmarSenha = 'Confirme a senha com pelo menos 6 caracteres.'
+  } else if (dados.senha !== dados.confirmarSenha) {
+    erros.confirmarSenha = 'As senhas precisam ser iguais.'
+  }
+
+  return erros
+}
+
+function preencherErroCampo(campo, mensagem) {
+  const grupo = campo.closest('.form-group')
+  const erro = document.getElementById(`${campo.id}Erro`)
+
+  if (grupo) {
+    grupo.classList.toggle('is-invalid', Boolean(mensagem))
+  }
+
+  if (erro) {
+    erro.textContent = mensagem || ''
+  }
+}
+
+function mostrarFeedbackFormulario(mensagem, tipo) {
+  const feedback = document.getElementById('formFeedback')
+
+  if (!feedback) {
+    return
+  }
+
+  feedback.className = `form-feedback is-visible is-${tipo}`
+  feedback.textContent = mensagem
+}
+
+function limparFeedbackFormulario() {
+  const feedback = document.getElementById('formFeedback')
+
+  if (!feedback) {
+    return
+  }
+
+  feedback.className = 'form-feedback'
+  feedback.textContent = ''
+}
+
+function renderizarResultadoCadastro(html) {
+  const container = document.getElementById('resultadoConteudo')
+
+  if (container) {
+    container.innerHTML = html
+  }
+}
+
+function inicializarFormularioCadastro() {
+  const form = document.getElementById('cadastroForm')
+
+  if (!form) {
+    return
+  }
+
+  const telefone = document.getElementById('telefone')
+  const cep = document.getElementById('cep')
+
+  if (telefone) {
+    telefone.addEventListener('input', () => {
+      telefone.value = formatarTelefone(telefone.value)
+      preencherErroCampo(telefone, '')
+    })
+  }
+
+  if (cep) {
+    cep.addEventListener('input', () => {
+      cep.value = formatarCep(cep.value)
+      preencherErroCampo(cep, '')
+    })
+  }
+
+  for (const campo of form.querySelectorAll('input')) {
+    campo.addEventListener('input', () => {
+      if (campo.id !== 'telefone' && campo.id !== 'cep') {
+        preencherErroCampo(campo, '')
+      }
+      limparFeedbackFormulario()
+    })
+  }
+
+  form.addEventListener('submit', handleCadastroSubmit)
+}
+
 // Inicializar quando a página carregar
 document.addEventListener('DOMContentLoaded', () => {
   inicializarTema()
   marcarNavAtivo()
   inicializarSecaoDestaque()
+  inicializarFormularioCadastro()
 
   // Carregar dados do GitHub apenas nas páginas que precisam
   if (document.getElementById('avatar')) {
@@ -627,55 +774,93 @@ document.addEventListener('DOMContentLoaded', () => {
     carregarRepositorios()
   }
 
-  // Configurar formulário de contato
-  const form = document.getElementById('contatoForm')
-  if (form) {
-    form.addEventListener('submit', handleFormSubmit)
-  }
-
   const botaoTema = document.getElementById('themeToggle')
   if (botaoTema) {
     botaoTema.addEventListener('click', alternarTema)
   }
 })
 
-// Função para lidar com o envio do formulário
-function handleFormSubmit(event) {
+// Função para lidar com o envio do formulário de cadastro
+async function handleCadastroSubmit(event) {
   event.preventDefault()
 
-  const nome = document.getElementById('nome').value
-  const email = document.getElementById('email').value
-  const mensagem = document.getElementById('mensagem').value
-
-  if (!nome || !email || !mensagem) {
-    alert('Por favor, preencha todos os campos!')
-    return
-  }
-
-  // Validar email
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-  if (!emailRegex.test(email)) {
-    alert('Por favor, insira um email válido!')
-    return
-  }
-
-  // Simular envio (em produção, isso seria enviado para um servidor)
-  console.log('Formulário enviado:', { nome, email, mensagem })
-
-  // Mostrar mensagem de sucesso
-  const btn = event.target.querySelector('.btn-enviar')
+  const form = event.currentTarget
+  const btn = form.querySelector('.btn-enviar')
   const btnText = btn.textContent
-  btn.textContent = '✓ Mensagem enviada com sucesso!'
-  btn.style.backgroundColor = '#28a745'
+  const dados = {
+    nome: document.getElementById('nome').value.trim(),
+    telefone: document.getElementById('telefone').value.trim(),
+    cep: document.getElementById('cep').value.trim(),
+    email: document.getElementById('email').value.trim(),
+    senha: document.getElementById('senha').value,
+    confirmarSenha: document.getElementById('confirmarSenha').value,
+  }
 
-  // Resetar formulário
-  event.target.reset()
+  limparFeedbackFormulario()
 
-  // Voltar ao estado anterior após 3 segundos
-  setTimeout(() => {
+  const erros = validarDadosCadastro(dados)
+  for (const campo of form.querySelectorAll('input')) {
+    const chave =
+      campo.id === 'confirmarSenha' ? 'confirmarSenha' : campo.name || campo.id
+    preencherErroCampo(campo, erros[chave] || '')
+  }
+
+  if (Object.keys(erros).length > 0) {
+    mostrarFeedbackFormulario(
+      'Corrija os campos destacados antes de enviar o cadastro.',
+      'error',
+    )
+    renderizarResultadoCadastro(
+      '<strong>Formulario com erros.</strong><br />Revise os campos marcados e tente novamente.',
+    )
+    return
+  }
+
+  try {
+    btn.disabled = true
+    btn.textContent = 'Enviando cadastro...'
+
+    const response = await fetch(REGISTER_API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name: dados.nome,
+        phone: dados.telefone,
+        cep: dados.cep,
+        email: dados.email,
+        password: dados.senha,
+        confirmPassword: dados.confirmarSenha,
+      }),
+    })
+
+    const payload = await response.json().catch(() => ({}))
+
+    if (!response.ok) {
+      throw new Error(
+        payload.message || 'Nao foi possivel concluir o cadastro agora.',
+      )
+    }
+
+    const brinde = payload.gift || 'brinde surpresa'
+    renderizarResultadoCadastro(
+      `<strong>Parabens ${dados.nome}</strong>, voce realizou seu cadastro com o email <strong>${dados.email}</strong>, entraremos em contato atraves do seu telefone <strong>${dados.telefone}</strong>, voce ganhou este premio <strong>${brinde}</strong>.`,
+    )
+    mostrarFeedbackFormulario('Cadastro enviado com sucesso.', 'success')
+    form.reset()
+  } catch (error) {
+    renderizarResultadoCadastro(
+      `<strong>Falha no cadastro.</strong><br />${error.message || 'Tente novamente mais tarde.'}`,
+    )
+    mostrarFeedbackFormulario(
+      error.message || 'Nao foi possivel enviar o cadastro.',
+      'error',
+    )
+  } finally {
     btn.textContent = btnText
-    btn.style.backgroundColor = ''
-  }, 3000)
+    btn.disabled = false
+  }
 }
 
 // Recarregar dados a cada 5 minutos (opcional)

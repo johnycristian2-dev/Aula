@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Johny Cristian Bolis | Contato</title>
+    <title>Johny Cristian Bolis | Cadastro</title>
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
@@ -16,7 +16,7 @@
           <li><a href="projetos.html">Projetos</a></li>
           <li><a href="marketplace.html">Marketplace</a></li>
           <li><a href="destaque.html">Em destaque</a></li>
-          <li><a href="contato.html" class="active">Contato</a></li>
+          <li><a href="contato.html" class="active">Cadastro</a></li>
           <li><a href="links.html">Links</a></li>
           <li>
             <a
@@ -42,58 +42,136 @@
 
     <div class="page-header">
       <div class="container">
-        <h1>Contato</h1>
-        <p>Vamos conversar? Manda uma mensagem!</p>
+        <h1>Cadastro</h1>
+        <p>Preencha seus dados, valide o formulario e confira o brinde sorteado.</p>
       </div>
     </div>
 
     <section class="contato">
       <div class="container">
-        <div class="contato-content">
-          <form class="contato-form" id="contatoForm">
+        <div class="contato-content cadastro-content">
+          <form class="contato-form cadastro-form" id="cadastroForm" novalidate>
+            <div class="form-intro">
+              <h2>Formulario de cadastro</h2>
+              <p>
+                Todos os campos sao obrigatorios. O formulario envia os dados para
+                a API da disciplina quando tudo estiver valido.
+              </p>
+            </div>
             <div class="form-group">
-              <label for="nome">Nome *</label>
-              <input type="text" id="nome" name="nome" required />
+              <label for="nome">Nome e sobrenome *</label>
+              <input
+                type="text"
+                id="nome"
+                name="nome"
+                placeholder="Ex.: Joao Silva"
+                autocomplete="name"
+                required
+              />
+              <small class="field-hint">Informe pelo menos duas palavras.</small>
+              <p class="field-error" id="nomeErro" aria-live="polite"></p>
+            </div>
+            <div class="form-group">
+              <label for="telefone">Telefone *</label>
+              <input
+                type="tel"
+                id="telefone"
+                name="telefone"
+                inputmode="numeric"
+                placeholder="00 00000-0000"
+                maxlength="14"
+                autocomplete="tel"
+                required
+              />
+              <small class="field-hint">Formato obrigatorio: 00 00000-0000.</small>
+              <p class="field-error" id="telefoneErro" aria-live="polite"></p>
+            </div>
+            <div class="form-group">
+              <label for="cep">CEP *</label>
+              <input
+                type="text"
+                id="cep"
+                name="cep"
+                inputmode="numeric"
+                placeholder="00000-000"
+                maxlength="9"
+                autocomplete="postal-code"
+                required
+              />
+              <small class="field-hint">Formato obrigatorio: 00000-000.</small>
+              <p class="field-error" id="cepErro" aria-live="polite"></p>
             </div>
             <div class="form-group">
               <label for="email">Email *</label>
-              <input type="email" id="email" name="email" required />
+              <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="nome@exemplo.com"
+                autocomplete="email"
+                required
+              />
+              <small class="field-hint">Use um email em formato valido.</small>
+              <p class="field-error" id="emailErro" aria-live="polite"></p>
             </div>
             <div class="form-group">
-              <label for="mensagem">Mensagem *</label>
-              <textarea
-                id="mensagem"
-                name="mensagem"
-                rows="5"
+              <label for="senha">Senha *</label>
+              <input
+                type="password"
+                id="senha"
+                name="senha"
+                minlength="6"
+                placeholder="Minimo de 6 caracteres"
+                autocomplete="new-password"
                 required
-              ></textarea>
+              />
+              <small class="field-hint">A senha precisa ter pelo menos 6 caracteres.</small>
+              <p class="field-error" id="senhaErro" aria-live="polite"></p>
             </div>
-            <button type="submit" class="btn-enviar">Enviar Mensagem</button>
+            <div class="form-group">
+              <label for="confirmarSenha">Confirmar senha *</label>
+              <input
+                type="password"
+                id="confirmarSenha"
+                name="confirmarSenha"
+                minlength="6"
+                placeholder="Repita a senha"
+                autocomplete="new-password"
+                required
+              />
+              <small class="field-hint">Este campo precisa ser igual ao da senha.</small>
+              <p class="field-error" id="confirmarSenhaErro" aria-live="polite"></p>
+            </div>
+            <div class="form-feedback" id="formFeedback" aria-live="polite"></div>
+            <button type="submit" class="btn-enviar">Cadastrar</button>
           </form>
 
-          <div class="redes-sociais">
-            <h3>Redes Sociais</h3>
-            <div class="sociais-links">
-              <a href="#" class="social-link" title="LinkedIn">
-                <span>LinkedIn</span>
-                <span class="maintenance">🔧 Em manutenção</span>
-              </a>
-              <a href="#" class="social-link" title="Instagram">
-                <span>Instagram</span>
-                <span class="maintenance">🔧 Em manutenção</span>
-              </a>
-              <a href="#" class="social-link" title="Twitter">
-                <span>Twitter</span>
-                <span class="maintenance">🔧 Em manutenção</span>
-              </a>
-              <a
-                href="https://github.com/johnycristian2-dev"
-                target="_blank"
-                class="social-link"
-                title="GitHub"
-              >
-                <span>GitHub</span>
-              </a>
+          <div class="redes-sociais cadastro-panel">
+            <h3>Regras do exercicio</h3>
+            <div class="sociais-links cadastro-rules">
+              <div class="social-link cadastro-rule">
+                <span>Nome completo</span>
+                <span class="maintenance">Minimo de duas palavras</span>
+              </div>
+              <div class="social-link cadastro-rule">
+                <span>Telefone</span>
+                <span class="maintenance">Formato 00 00000-0000</span>
+              </div>
+              <div class="social-link cadastro-rule">
+                <span>CEP</span>
+                <span class="maintenance">Formato 00000-000</span>
+              </div>
+              <div class="social-link cadastro-rule">
+                <span>Email e senha</span>
+                <span class="maintenance">Validacao antes do POST</span>
+              </div>
+            </div>
+
+            <div class="cadastro-result" id="resultadoCadastro">
+              <h4>Resultado</h4>
+              <div class="cadastro-result-card" id="resultadoConteudo">
+                Preencha o formulario e envie para visualizar a resposta da API.
+              </div>
             </div>
           </div>
         </div>
